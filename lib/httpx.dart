@@ -19,7 +19,7 @@ class HttpX {
 extension Http on String {
 
   Future<ApiResponse<T>> httpGet<T>(
-      {required Function fromJson, bool isAuth = true}) async {
+      {required Function converter, bool isAuth = true}) async {
     var url = Uri.parse("${HttpX.instance.baseUrl}$this");
     try {
       http.Response response = await http.get(url, headers: {
@@ -28,7 +28,7 @@ extension Http on String {
       });
       return ApiResponse<T>(
           code: response.statusCode,
-          data: fromJson(jsonDecode(response.body)),
+          data: converter(jsonDecode(response.body)),
           error: null);
     } catch (error) {
       print("error" + error.toString());
@@ -40,7 +40,7 @@ extension Http on String {
   }
 
   Future<ApiResponse<T>> httpPost<T>(
-      {body, required Function fromJson, bool isAuth = true}) async {
+      {body, required Function converter, bool isAuth = true}) async {
     var url = Uri.parse("${HttpX.instance.baseUrl}$this");
     try {
       http.Response response =
@@ -51,7 +51,7 @@ extension Http on String {
       print("response: " + response.body);
       return ApiResponse<T>(
           code: response.statusCode,
-          data: fromJson(jsonDecode(response.body)),
+          data: converter(jsonDecode(response.body)),
           error: null);
     } catch (error) {
       print("error" + error.toString());
@@ -63,7 +63,7 @@ extension Http on String {
   }
 
   Future<ApiResponse<T>> httpMultiPart<T>(
-      {body, required Function fromJson,List<http.MultipartFile>? files,Map<String,String>? fields, bool isAuth = true}) async {
+      {body, required Function converter,List<http.MultipartFile>? files,Map<String,String>? fields, bool isAuth = true}) async {
     var url = Uri.parse("${HttpX.instance.baseUrl}$this");
     var request = http.MultipartRequest("POST", url)
       ..headers.addAll({
@@ -77,7 +77,7 @@ extension Http on String {
       http.Response response = await http.Response.fromStream(await request.send());
       return ApiResponse<T>(
           code: response.statusCode,
-          data: fromJson(jsonDecode(response.body)),
+          data: converter(jsonDecode(response.body)),
           error: null);
     } catch (error) {
       return ApiResponse<T>(
@@ -88,7 +88,7 @@ extension Http on String {
   }
 
   Future<ApiResponse<T>> httpPut<T>(
-      {body, required Function fromJson, bool isAuth = true}) async {
+      {body, required Function converter, bool isAuth = true}) async {
     var url = Uri.parse("${HttpX.instance.baseUrl}$this");
     try {
       http.Response response =
@@ -99,7 +99,7 @@ extension Http on String {
       print("response: " + response.body);
       return ApiResponse<T>(
           code: response.statusCode,
-          data: fromJson(jsonDecode(response.body)),
+          data: converter(jsonDecode(response.body)),
           error: null);
     } catch (error) {
       print("error" + error.toString());
@@ -111,7 +111,7 @@ extension Http on String {
   }
 
   Future<ApiResponse<T>> httpDelete<T>(
-      {body, required Function fromJson, bool isAuth = true}) async {
+      {body, required Function converter, bool isAuth = true}) async {
     var url = Uri.parse("${HttpX.instance.baseUrl}$this");
     try {
       http.Response response =
@@ -122,7 +122,7 @@ extension Http on String {
       print("response: " + response.body);
       return ApiResponse<T>(
           code: response.statusCode,
-          data: fromJson(jsonDecode(response.body)),
+          data: converter(jsonDecode(response.body)),
           error: null);
     } catch (error) {
       print("error" + error.toString());
