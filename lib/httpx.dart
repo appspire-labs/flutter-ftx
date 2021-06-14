@@ -1,9 +1,12 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:http/http.dart' as http;
 
-abstract class ApiResponse {
-  fromJson(Map<String, dynamic> json);
-  withError(String errorMessage);
+class ApiResponse<T> {
+  late int code;
+  late String? error;
+  late T? data;
+  ApiResponse({required this.code, this.error, this.data});
 }
 
 class HttpX {
@@ -14,62 +17,119 @@ class HttpX {
 }
 
 extension Http on String {
-  Future<T> httpGet<T>() async{
+
+  Future<ApiResponse<T>> httpGet<T>(
+      {required Function fromJson, bool isAuth = true}) async {
     var url = Uri.parse("${HttpX.instance.baseUrl}/$this");
-    try{
+    try {
       http.Response response = await http.get(url, headers: {
-        "Authorization": "Bearer "+ await HttpX.instance.token(),
+        if (isAuth) "Authorization": "Bearer " + await HttpX.instance.token(),
         "content-type": "application/json"
       });
-      if(response.statusCode == 200){
-        print("response: "+response.body);
-        return (T as ApiResponse).fromJson(jsonDecode(response.body));
-      }else{
-        print("error"+response.body);
-        return (T as ApiResponse).withError(response.body);
-      }
-    }catch (error) {
-      print("error"+error.toString());
-      return (T as ApiResponse).withError(error.toString());
+      return ApiResponse<T>(
+          code: response.statusCode,
+          data: fromJson(jsonDecode(response.body)),
+          error: null);
+    } catch (error) {
+      print("error" + error.toString());
+      return ApiResponse<T>(
+          code: HttpStatus.internalServerError,
+          data: null,
+          error: error.toString());
     }
   }
 
-  Future<T> httpPost<T>({body}) async{
+  Future<ApiResponse<T>> httpPost<T>(
+      {body, required Function fromJson, bool isAuth = true}) async {
     var url = Uri.parse(this);
-    try{
-      http.Response response = await http.post(url,body: jsonEncode(body), headers: {
-        "Authorization": "Bearer "+ await HttpX.instance.token(),
+    try {
+      http.Response response =
+          await http.post(url, body: jsonEncode(body), headers: {
+        if (isAuth) "Authorization": "Bearer " + await HttpX.instance.token(),
         "content-type": "application/json"
       });
-      if(response.statusCode == 200){
-        print("response: "+response.body);
-        return (T as ApiResponse).fromJson(jsonDecode(response.body));
-      }else {
-        print("error"+response.body);
-        return (T as ApiResponse).withError(response.body);
-      }
-    }catch (error) {
-      print("error"+error.toString());
-      return (T as ApiResponse).withError(error.toString());
+      print("response: " + response.body);
+      return ApiResponse<T>(
+          code: response.statusCode,
+          data: fromJson(jsonDecode(response.body)),
+          error: null);
+    } catch (error) {
+      print("error" + error.toString());
+      return ApiResponse<T>(
+          code: HttpStatus.internalServerError,
+          data: null,
+          error: error.toString());
     }
   }
- Future<T> httpPut<T>({body}) async{
+
+  Future<ApiResponse<T>> httpMultiPart<T>(
+      {body, required Function fromJson,List<http.MultipartFile>? files,Map<String,String>? fields, bool isAuth = true}) async {
     var url = Uri.parse(this);
-    try{
-      http.Response response = await http.put(url,body: jsonEncode(body), headers: {
-        "Authorization": "Bearer "+ await HttpX.instance.token(),
+    var request = http.MultipartRequest("POST", url)
+      ..headers.addAll({
+        if(isAuth) "Authorization": "Bearer " + await HttpX.instance.token(),
+        "content-type": "multipart/form-data"
+      });
+    if(files!=null)request.files.addAll(files);
+    if(fields!=null)request.fields.addAll(fields);
+
+    try {
+      http.Response response = await http.Response.fromStream(await request.send());
+      return ApiResponse<T>(
+          code: response.statusCode,
+          data: fromJson(jsonDecode(response.body)),
+          error: null);
+    } catch (error) {
+      return ApiResponse<T>(
+          code: HttpStatus.internalServerError,
+          data: null,
+          error: error.toString());
+    }
+  }
+
+  Future<ApiResponse<T>> httpPut<T>(
+      {body, required Function fromJson, bool isAuth = true}) async {
+    var url = Uri.parse(this);
+    try {
+      http.Response response =
+          await http.put(url, body: jsonEncode(body), headers: {
+        if (isAuth) "Authorization": "Bearer " + await HttpX.instance.token(),
         "content-type": "application/json"
       });
-      if(response.statusCode == 200){
-        print("response: "+response.body);
-        return (T as ApiResponse).fromJson(jsonDecode(response.body));
-      }else {
-        print("error"+response.body);
-        return (T as ApiResponse).withError(response.body);
-      }
-    }catch (error) {
-      print("error"+error.toString());
-      return (T as ApiResponse).withError(error.toString());
+      print("response: " + response.body);
+      return ApiResponse<T>(
+          code: response.statusCode,
+          data: fromJson(jsonDecode(response.body)),
+          error: null);
+    } catch (error) {
+      print("error" + error.toString());
+      return ApiResponse<T>(
+          code: HttpStatus.internalServerError,
+          data: null,
+          error: error.toString());
+    }
+  }
+
+  Future<ApiResponse<T>> httpDelete<T>(
+      {body, required Function fromJson, bool isAuth = true}) async {
+    var url = Uri.parse(this);
+    try {
+      http.Response response =
+          await http.delete(url, body: jsonEncode(body), headers: {
+        if (isAuth) "Authorization": "Bearer " + await HttpX.instance.token(),
+        "content-type": "application/json"
+      });
+      print("response: " + response.body);
+      return ApiResponse<T>(
+          code: response.statusCode,
+          data: fromJson(jsonDecode(response.body)),
+          error: null);
+    } catch (error) {
+      print("error" + error.toString());
+      return ApiResponse<T>(
+          code: HttpStatus.internalServerError,
+          data: null,
+          error: error.toString());
     }
   }
 

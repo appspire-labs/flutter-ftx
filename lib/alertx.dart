@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'navigation.dart';
+import 'package:ftx/navigationx.dart';
 
 class AlertX {
   AlertX._privateConstructor();
