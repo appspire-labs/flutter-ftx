@@ -20,7 +20,7 @@ extension Http on String {
 
   Future<ApiResponse<T>> httpGet<T>(
       {required Function fromJson, bool isAuth = true}) async {
-    var url = Uri.parse("${HttpX.instance.baseUrl}/$this");
+    var url = Uri.parse("${HttpX.instance.baseUrl}$this");
     try {
       http.Response response = await http.get(url, headers: {
         if (isAuth) "Authorization": "Bearer " + await HttpX.instance.token(),
@@ -41,7 +41,7 @@ extension Http on String {
 
   Future<ApiResponse<T>> httpPost<T>(
       {body, required Function fromJson, bool isAuth = true}) async {
-    var url = Uri.parse(this);
+    var url = Uri.parse("${HttpX.instance.baseUrl}$this");
     try {
       http.Response response =
           await http.post(url, body: jsonEncode(body), headers: {
@@ -64,7 +64,7 @@ extension Http on String {
 
   Future<ApiResponse<T>> httpMultiPart<T>(
       {body, required Function fromJson,List<http.MultipartFile>? files,Map<String,String>? fields, bool isAuth = true}) async {
-    var url = Uri.parse(this);
+    var url = Uri.parse("${HttpX.instance.baseUrl}$this");
     var request = http.MultipartRequest("POST", url)
       ..headers.addAll({
         if(isAuth) "Authorization": "Bearer " + await HttpX.instance.token(),
@@ -89,7 +89,7 @@ extension Http on String {
 
   Future<ApiResponse<T>> httpPut<T>(
       {body, required Function fromJson, bool isAuth = true}) async {
-    var url = Uri.parse(this);
+    var url = Uri.parse("${HttpX.instance.baseUrl}$this");
     try {
       http.Response response =
           await http.put(url, body: jsonEncode(body), headers: {
@@ -112,7 +112,7 @@ extension Http on String {
 
   Future<ApiResponse<T>> httpDelete<T>(
       {body, required Function fromJson, bool isAuth = true}) async {
-    var url = Uri.parse(this);
+    var url = Uri.parse("${HttpX.instance.baseUrl}$this");
     try {
       http.Response response =
           await http.delete(url, body: jsonEncode(body), headers: {

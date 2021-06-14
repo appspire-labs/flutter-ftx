@@ -1,3 +1,6 @@
+## 0.0.4
+Fixed minor bugs
+
 ## 0.0.3
 Added multipart request
 
@@ -5,5 +8,4 @@ Added multipart request
 Added helpers
 
 ## 0.0.1
-
-* TODO: Describe initial release.
+Initial release
