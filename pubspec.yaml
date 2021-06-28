@@ -1,6 +1,6 @@
 name: ftx
 description: A new Flutter project.
-version: 0.0.4
+version: 0.2.0
 homepage: https://github.com/appspire-labs/flutter-ftx
 
 environment:
@@ -12,6 +12,10 @@ dependencies:
     sdk: flutter
 
   http: ^0.13.3
+  firebase_auth: ^1.4.1
+  firebase_messaging: ^10.0.2
+  flutter_local_notifications: ^6.0.0
+  flutter_uploader: ^3.0.0-beta.2
 
 dev_dependencies:
   flutter_test:
