@@ -28,9 +28,11 @@ extension Http on String {
         if (isAuth) HttpX.instance.headerName: await HttpX.instance.token(),
         if(isContentTypeHeader)"content-type": "application/json"
       });
+      print("response: " + response.body);
+      var encodedData = jsonEncode(response.body);
       return ApiResponse<T>(
           code: response.statusCode,
-          data: converter(jsonDecode(response.body)),
+          data: converter(jsonDecode(encodedData)),
           error: null);
     } catch (error) {
       print("error" + error.toString());
@@ -51,9 +53,10 @@ extension Http on String {
         if(isContentTypeHeader)"content-type": "application/json"
       });
       print("response: " + response.body);
+      var encodedData = jsonEncode(response.body);
       return ApiResponse<T>(
           code: response.statusCode,
-          data: converter(jsonDecode(response.body)),
+          data: converter(jsonDecode(encodedData)),
           error: null);
     } catch (error) {
       print("error" + error.toString());
@@ -77,9 +80,10 @@ extension Http on String {
 
     try {
       http.Response response = await http.Response.fromStream(await request.send());
+      var encodedData = jsonEncode(response.body);
       return ApiResponse<T>(
           code: response.statusCode,
-          data: converter(jsonDecode(response.body)),
+          data: converter(jsonDecode(encodedData)),
           error: null);
     } catch (error) {
       return ApiResponse<T>(
@@ -128,9 +132,10 @@ extension Http on String {
         if(isContentTypeHeader)"content-type": "application/json"
       });
       print("response: " + response.body);
+      var encodedData = jsonEncode(response.body);
       return ApiResponse<T>(
           code: response.statusCode,
-          data: converter(jsonDecode(response.body)),
+          data: converter(jsonDecode(encodedData)),
           error: null);
     } catch (error) {
       print("error" + error.toString());
@@ -151,9 +156,10 @@ extension Http on String {
         if(isContentTypeHeader)"content-type": "application/json"
       });
       print("response: " + response.body);
+      var encodedData = jsonEncode(response.body);
       return ApiResponse<T>(
           code: response.statusCode,
-          data: converter(jsonDecode(response.body)),
+          data: converter(jsonDecode(encodedData)),
           error: null);
     } catch (error) {
       print("error" + error.toString());
