@@ -1,3 +1,12 @@
+## 0.2.7
+Fixed minor bugs
+
+## 0.2.6
+Fixed minor bugs
+
+## 0.2.5
+Fixed minor bugs
+
 ## 0.2.4
 Fixed minor bugs
 

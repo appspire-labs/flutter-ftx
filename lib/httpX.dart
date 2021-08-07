@@ -26,13 +26,18 @@ extension Http on String {
     try {
       http.Response response = await http.get(url, headers: {
         if (isAuth) HttpX.instance.headerName: await HttpX.instance.token(),
-        if(isContentTypeHeader)"content-type": "application/json"
+        if(isContentTypeHeader)'Content-Type': 'application/json;charset=UTF-8',
+        if(isContentTypeHeader) 'Charset': 'utf-8'
       });
       print("response: " + response.body);
-      var encodedData = jsonEncode(response.body);
+      final prefix = 'ï»¿';
+      var body = response.body;
+      if (body.startsWith(prefix)) {
+        body = body.substring(prefix.length);
+      }
       return ApiResponse<T>(
           code: response.statusCode,
-          data: converter(jsonDecode(encodedData)),
+          data: converter(jsonDecode(body)),
           error: null);
     } catch (error) {
       print("error" + error.toString());
@@ -50,13 +55,18 @@ extension Http on String {
       http.Response response =
       await http.post(url, body: jsonEncode(body), headers: {
         if (isAuth) HttpX.instance.headerName: await HttpX.instance.token(),
-        if(isContentTypeHeader)"content-type": "application/json"
+        if(isContentTypeHeader)'Content-Type': 'application/json;charset=UTF-8',
+        if(isContentTypeHeader) 'Charset': 'utf-8'
       });
       print("response: " + response.body);
-      var encodedData = jsonEncode(response.body);
+      final prefix = 'ï»¿';
+      var resBody = response.body;
+      if (resBody.startsWith(prefix)) {
+        resBody = resBody.substring(prefix.length);
+      }
       return ApiResponse<T>(
           code: response.statusCode,
-          data: converter(jsonDecode(encodedData)),
+          data: converter(jsonDecode(resBody)),
           error: null);
     } catch (error) {
       print("error" + error.toString());
@@ -80,10 +90,9 @@ extension Http on String {
 
     try {
       http.Response response = await http.Response.fromStream(await request.send());
-      var encodedData = jsonEncode(response.body);
       return ApiResponse<T>(
           code: response.statusCode,
-          data: converter(jsonDecode(encodedData)),
+          data: converter(jsonDecode(response.body)),
           error: null);
     } catch (error) {
       return ApiResponse<T>(
@@ -129,13 +138,18 @@ extension Http on String {
       http.Response response =
       await http.put(url, body: jsonEncode(body), headers: {
         if (isAuth) HttpX.instance.headerName: await HttpX.instance.token(),
-        if(isContentTypeHeader)"content-type": "application/json"
+        if(isContentTypeHeader)'Content-Type': 'application/json;charset=UTF-8',
+        if(isContentTypeHeader) 'Charset': 'utf-8'
       });
       print("response: " + response.body);
-      var encodedData = jsonEncode(response.body);
+      final prefix = 'ï»¿';
+      var resBody = response.body;
+      if (resBody.startsWith(prefix)) {
+        resBody = resBody.substring(prefix.length);
+      }
       return ApiResponse<T>(
           code: response.statusCode,
-          data: converter(jsonDecode(encodedData)),
+          data: converter(jsonDecode(resBody)),
           error: null);
     } catch (error) {
       print("error" + error.toString());
@@ -153,13 +167,18 @@ extension Http on String {
       http.Response response =
       await http.delete(url, body: jsonEncode(body), headers: {
         if (isAuth) HttpX.instance.headerName: await HttpX.instance.token(),
-        if(isContentTypeHeader)"content-type": "application/json"
+        if(isContentTypeHeader)'Content-Type': 'application/json;charset=UTF-8',
+        if(isContentTypeHeader) 'Charset': 'utf-8'
       });
       print("response: " + response.body);
-      var encodedData = jsonEncode(response.body);
+      final prefix = 'ï»¿';
+      var resBody = response.body;
+      if (resBody.startsWith(prefix)) {
+        resBody = resBody.substring(prefix.length);
+      }
       return ApiResponse<T>(
           code: response.statusCode,
-          data: converter(jsonDecode(encodedData)),
+          data: converter(jsonDecode(resBody)),
           error: null);
     } catch (error) {
       print("error" + error.toString());
