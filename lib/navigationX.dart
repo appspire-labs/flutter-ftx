@@ -16,8 +16,8 @@ class Navigation {
     return navigatorKey.currentState?.pushReplacementNamed(path,arguments: args);
   }
 
-  Future<dynamic>? navigateAndRemoveUntil(String path) {
-    return navigatorKey.currentState?.pushNamedAndRemoveUntil(path,(Route<dynamic> route) => false);
+  Future<dynamic>? navigateAndRemoveUntil(String path, {Object? args}) {
+    return navigatorKey.currentState?.pushNamedAndRemoveUntil(path,(Route<dynamic> route) => false, arguments: args);
   }
 
   goBack() {

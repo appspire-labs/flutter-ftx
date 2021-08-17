@@ -32,6 +32,29 @@ class FirebaseX{
   int resendToken = 0;
   FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
 
+  Future<void> signInWithEmail(String email, String password, Function onSuccess, Function onError) async{
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: email,
+          password: password
+      );
+      onSuccess();
+    } on FirebaseAuthException catch  (e) {
+      print('Failed with error code: ${e.code}');
+      AlertX.instance.showAlert(
+          title: "Error",
+          msg: e.message ?? "",
+          negativeButtonText: null,
+          positiveButtonText: "Done",
+          negativeButtonPressed: (){},
+          positiveButtonPressed: (){
+            Navigation.instance.goBack();
+          }
+      );
+      onError();
+    }
+  }
+
   Future<void> handleSignIn(PhoneAuthCredential credential, Function onSuccess, Function onError) async{
     await auth.signInWithCredential(credential).then((value) {
       onSuccess();
